@@ -41,7 +41,7 @@ var mapStyle = {
 };
 
 // Accessing the Toronto neighborhoods GeoJSON URL.
-let torontoHoods = "https://raw.githubusercontent.com/blueschistrocks/Earthquake_Mapping/Mapping_GeoJSON_Polygons/Mapping_GeoJSON_Polygons/torontoNeighborhoods.json";
+let torontoHoods = "https://raw.githubusercontent.com/blueschistrocks/Earthquake_Mapping/main/Mapping_GeoJSON_Polygons/torontoNeighborhoods.json";
 d3.json(torontoHoods).then(function(data) {
   console.log(data);
 // Creating a GeoJSON layer with the retrieved data.
