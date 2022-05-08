@@ -36,12 +36,14 @@ let baseMaps = {
 // Create the earthquake layer for our map.
 let earthquakes = new L.layerGroup();
 let ca_counties = new L.layerGroup();
+let ca_cities = new L.layerGroup();
 
 // We define an object that contains the overlays.
 // This overlay will be visible all the time.
 let overlays = {
   Earthquakes: earthquakes,
-  CalCounties: ca_counties
+  CalCounties: ca_counties,
+  CalCities: ca_cities
 };
 
 // Create the map object with center, zoom level and default layer.
@@ -55,7 +57,7 @@ let map = L.map('mapid', {
 // Then we add a control to the map that will allow the user to change which layers are visible.
 L.control.layers(baseMaps, overlays).addTo(map);
 
-// Our style object
+// Our county style object
 var mapStyle = {
     color: "blue",
     fillColor: "blue",
@@ -63,20 +65,67 @@ var mapStyle = {
     weight: 1.0
   };
 
+var mapStyle1 = {
+  color: "green",
+  fillColor: "green",
+  fillOpacity: 0.25,
+  weight: 1.0
+};
+
 // Accessing the earthquake GeoJSON URL.
 let earthquake = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 // Accessing the cal county GeoJSON file.
 let counties = "static/data/california-counties.json";
+let cities = "static/data/stanford-zd071bk4213-geojson.json"
 
 // function to convert integer time to timestamp
 function convertTime(time) {
     return new Date(time)
 }
 
+// Retrive the county data
+d3.json(cities).then(function(data) {
+  //console.log(data);
+// Creating a GeoJSON layer with the retrieved data.
+L.geoJSON(data, {
+  style: mapStyle1,
+  
+  onEachFeature: function(feature, layer) {
+    // Set mouse events to change map styling
+    layer.on({
+      // When a user's mouse touches a map feature, the mouseover event calls this function, that feature's opacity changes to 90% so that it stands out
+      mouseover: function(event) {
+        layer = event.target;
+        layer.setStyle({
+          fillOpacity: 0.5
+        });
+      },
+      // When the cursor no longer hovers over a map feature - when the mouseout event occurs - the feature's opacity reverts back to 50%
+      mouseout: function(event) {
+        layer = event.target;
+        layer.setStyle({
+          fillOpacity: 0.25
+        });
+      },
+      // When a feature (neighborhood) is clicked, it is enlarged to fit the screen
+      click: function(event) {
+        map.fitBounds(event.target.getBounds());
+      }
+    });
+    // Giving each feature a pop-up with information pertinent to it
+    layer.bindPopup("<h1>" + "City" + "</h1> <hr> <h2>" + feature.properties.name + "</h2>");
+
+  }
+
+}).addTo(ca_cities);
+
+ca_cities.addTo(map);
+});
+
 
 // Retrive the county data
 d3.json(counties).then(function(data) {
-    console.log(data);
+    //console.log(data);
   // Creating a GeoJSON layer with the retrieved data.
   L.geoJSON(data, {
     style: mapStyle,
@@ -164,7 +213,7 @@ L.geoJSON(data, {
 // We turn each feature into a circleMarker on the map.
     
 pointToLayer: function(feature, latlng) {
-            console.log(data);
+            //console.log(data);
             return L.circleMarker(latlng);
         },
     // We set the style for each circleMarker using our styleInfo function.
@@ -172,7 +221,7 @@ pointToLayer: function(feature, latlng) {
  // We create a popup for each circleMarker to display the magnitude and
  //  location of the earthquake after the marker has been created and styled.
  onEachFeature: function(feature, layer) {
-  layer.bindPopup("<strong>" + "Magnitude: " + "</strong>" + feature.properties.mag + "<br><strong>" + "Location: " + "</strong>" + feature.properties.place + "<br><strong>" + "Date: " + "</strong>" + convertTime(feature.properties.time));
+  layer.bindPopup("<strong>" + "Magnitude: " + "</strong>" + feature.properties.mag + "<br><strong>" + "Depth: " + "</strong>" + feature.geometry.coordinates[2] + " km" + "<br><strong>" + "Location: " + "</strong>" + feature.properties.place + "<br><strong>" + "Date: " + "</strong>" + convertTime(feature.properties.time));
 }
       
 }).addTo(earthquakes);
