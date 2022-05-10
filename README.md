@@ -11,5 +11,5 @@ Challenge Objectives:
 #### Map Clip 1
 ![image](https://github.com/blueschistrocks/Earthquake_Mapping/blob/97813a947eaddeee7552cff8e9bc0bc9b6204eca/Earthquake_Challenge/images/Earthquakes.png)<br>
 
-#### Map Clip 1
+#### Map Clip 2
 ![image](https://github.com/blueschistrocks/Earthquake_Mapping/blob/97813a947eaddeee7552cff8e9bc0bc9b6204eca/Earthquake_Challenge/images/Major_Earthquakes.png)<br>
