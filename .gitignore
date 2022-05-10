@@ -1,6 +1,7 @@
 # files to exclude
 config.js
 .DS_Store
+.vscode/
 
 
 
