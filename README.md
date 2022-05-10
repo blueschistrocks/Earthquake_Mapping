@@ -1,5 +1,5 @@
 # Earthquake_Mapping
-Challenge Objectives:
+## Challenge Objectives
 
  - Retrieve data from a GeoJSON file.
  - Make requests to an API server to host maps.
